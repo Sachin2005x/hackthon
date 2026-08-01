@@ -1,0 +1,9 @@
+export const simulationMessages=[
+{id:1,name:'Maya Chen',age:34,role:'Founder',income:'High',behaviour:'Premium buyer',probability:91,personality:'Vision-led',text:'I would pay for this if it replaces my current reporting stack.',sentiment:'positive',emotion:'😍 Interested',confidence:92,topic:'Value'},
+{id:2,name:'Rohan Patel',age:28,role:'Engineer',income:'High',behaviour:'Risk aware',probability:78,personality:'Analytical',text:'The value is clear, but I need to understand the privacy model first.',sentiment:'neutral',emotion:'🤔 Curious',confidence:78,topic:'Privacy'},
+{id:3,name:'Elena Rossi',age:37,role:'Marketing Lead',income:'High',behaviour:'Early adopter',probability:85,personality:'Outcome-led',text:'The dashboard is compelling. I would want a team plan before committing.',sentiment:'positive',emotion:'😊 Excited',confidence:85,topic:'Features'},
+{id:4,name:'Omar Khan',age:51,role:'Consultant',income:'High',behaviour:'Value conscious',probability:69,personality:'Sceptical',text:'$29 feels fair only when the first result is immediate.',sentiment:'negative',emotion:'😟 Concerned',confidence:69,topic:'Pricing'},
+{id:5,name:'Sarah Chen',age:28,role:'Software Engineer',income:'High',behaviour:'Premium buyer',probability:88,personality:'Pragmatic',text:'This would save me at least one hour every Friday.',sentiment:'positive',emotion:'😊 Excited',confidence:88,topic:'Value'},
+{id:6,name:'Marcus Reid',age:42,role:'Business Owner',income:'Medium',behaviour:'Comparison shopper',probability:74,personality:'Practical',text:'I would compare it with the tools I already pay for before switching.',sentiment:'neutral',emotion:'😐 Neutral',confidence:74,topic:'Competition'}
+];
+export const timeline=['Persona population generated','Pricing acceptance analysed','Competitor comparison completed','Feature request: team plan identified','Recommendation: foreground privacy proof'];
