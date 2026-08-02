@@ -32,9 +32,11 @@
       @keyframes rise{from{opacity:0;transform:translateY(16px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
       .fade{transition:opacity .55s ease,visibility .55s ease;opacity:0;visibility:hidden}
       .glow{position:fixed;inset:0;pointer-events:none;opacity:.5;background:radial-gradient(ellipse 30% 22% at 50% 46%,rgba(94,234,212,.09),transparent 70%)}
+      .video{position:fixed;inset:0;width:100vw;height:100vh;object-fit:cover;background:#000;z-index:2}
     </style>
   </head>
   <body>
+    <video id="video" class="video" autoplay muted playsinline src="/assets/splash.mp4"></video>
     <div class="glow"></div>
     <div class="wrap" id="wrap">
       <div class="mark"><i class="dot"></i><i class="ring"></i></div>
@@ -46,18 +48,18 @@
     </div>
     <script>
       (()=>{
+        const go=()=>{document.getElementById('video').classList.add('fade');document.getElementById('wrap').classList.add('fade');setTimeout(()=>location.replace('/persona.html'),520)};
         const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const fill=document.getElementById('fill'),pct=document.getElementById('pct'),boot=document.getElementById('boot');
-        const lines=['Spawning behaviour engines','Generating 12,480 customer personas','Running purchase simulations','Assembling decision signals','Rendering the universe'];
-        let n=0,li=0;
-        if(!reduce){setInterval(()=>{boot.innerHTML=lines[li++%lines.length]+'<b>…</b>'},520)}
-        const total=reduce?10:2150,start=performance.now();
-        const timer=setInterval(()=>{
-          const t=Math.min(1,(performance.now()-start)/total);
-          const eased=t===1?100:Math.round((1-Math.pow(1-t,3))*100);
-          if(eased>n){n=eased;fill.style.width=n+'%';pct.textContent=n+'%'}
-          if(t===1){clearInterval(timer);setTimeout(()=>{document.getElementById('wrap').classList.add('fade');setTimeout(()=>location.replace('/persona.html'),520)},260)}
-        },40);
+        const video=document.getElementById('video');
+        let ran=false;
+        const finish=()=>{if(ran)return;ran=true;go()};
+        video.addEventListener('ended',finish);
+        video.addEventListener('error',runLoader);
+        video.addEventListener('stalled',()=>{});
+        const p=video.play();
+        if(p&&p.catch)p.catch(()=>{if(!reduce)runLoader()});
+        setTimeout(()=>{if(!video.ended&&video.currentTime===0&&video.networkState!==2)runLoader()},4000);
+        function runLoader(){if(video.dataset.fall)return;video.dataset.fall=1;video.style.display='none';const fill=document.getElementById('fill'),pct=document.getElementById('pct'),boot=document.getElementById('boot');const lines=['Spawning behaviour engines','Generating 12,480 customer personas','Running purchase simulations','Assembling decision signals','Rendering the universe'];let n=0,li=0;if(!reduce){setInterval(()=>{boot.innerHTML=lines[li++%lines.length]+'<b>…</b>'},520)}const total=reduce?10:2150,start=performance.now();const timer=setInterval(()=>{const t=Math.min(1,(performance.now()-start)/total);const eased=t===1?100:Math.round((1-Math.pow(1-t,3))*100);if(eased>n){n=eased;fill.style.width=n+'%';pct.textContent=n+'%'}if(t===1){clearInterval(timer);setTimeout(()=>{go();},260)}},40)}
       })();
     </script>
   </body>
