@@ -86,12 +86,14 @@ function processRun(id) {
 
 export function buildData(run) {
   const opts = { seed: run.seed, brief: run.product };
+  const personas = generatePersonas({ ...opts, count: 40 });
+  const simulation = generateSimulation(opts);
   return {
-    personas: generatePersonas({ ...opts, count: 40 }),
-    simulation: generateSimulation(opts),
+    personas,
+    simulation,
     dashboard: generateDashboard(opts),
     recommendations: generateRecommendations(opts),
-    report: generateReport(opts),
+    report: generateReport({ ...opts, personas, simulation }),
     summary: {
       personaCount: 12480,
       interactions: 25400,

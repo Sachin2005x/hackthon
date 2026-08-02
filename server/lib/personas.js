@@ -51,12 +51,13 @@ export function generateSimulation({ seed = 1, brief = {} } = {}) {
   const rng = createRng(seed + 7);
   const topics = ['Value', 'Privacy', 'Features', 'Pricing', 'Competition', 'Support'];
   const personalities = ['Vision-led', 'Analytical', 'Outcome-led', 'Sceptical', 'Pragmatic', 'Practical'];
-  const sentiments = ['positive', 'neutral', 'negative'];
   const emotions = { positive: '😍 Interested', neutral: '🤔 Curious', negative: '😟 Concerned' };
   const base = clamp(brief.price ? 78 - (brief.price - 29) * 0.6 : 78, 45, 95);
 
   const messages = generatePersonas({ seed: seed + 3, count: 8, brief }).map((p, i) => {
-    const sentiment = sentiments[i % 3];
+    const roll = rng.next();
+    const sentiment =
+      roll < base / 100 ? 'positive' : roll < base / 100 + (100 - base) / 200 ? 'neutral' : 'negative';
     const topic = rng.pick(topics);
     return {
       id: i + 1,
