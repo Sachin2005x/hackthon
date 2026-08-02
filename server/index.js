@@ -32,7 +32,8 @@ app.use((err, req, res, next) => {
 
 const ROOT = path.resolve(__dirname, '..');
 const distDir = path.join(ROOT, 'dist');
-app.use(express.static(distDir));
+app.use(express.static(distDir, { index: false }));
+app.get(['/', '/index.html'], (req, res) => res.sendFile(path.join(ROOT, 'index.html')));
 app.get(['/persona.html', '/persona'], (req, res) => res.sendFile(path.join(ROOT, 'persona.html')));
 app.get(['/workspace.html'], (req, res) => res.sendFile(path.join(ROOT, 'workspace.html')));
 app.use((req, res, next) => {
