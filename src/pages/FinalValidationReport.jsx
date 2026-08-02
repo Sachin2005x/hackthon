@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import data from '../data/phase9Data.json';
+import localData from '../data/phase9Data.json';
+import { api, getRunId } from '../api/client';
 import { ReportIntro } from '../components/phase9/ReportIntro';
 import { ValidationSummaryCard } from '../components/phase9/ValidationSummaryCard';
 import { ReportSectionCard } from '../components/phase9/ReportSectionCard';
@@ -9,6 +11,21 @@ import { LaunchDetailCard } from '../components/phase9/LaunchDetailCard';
 import { ExportCentre } from '../components/phase9/ExportCentre';
 
 export default function FinalValidationReport() {
+  const [data, setData] = useState(localData);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const id = await getRunId();
+      if (!id || !alive) return;
+      try {
+        const d = await api(`/validations/${id}/report`);
+        if (alive && d && d.summaryCards) setData(d);
+      } catch {}
+    })();
+    return () => { alive = false; };
+  }, []);
+
   return (
     <section className="page phase9-page">
       <ReportIntro title={data.title} subtitle={data.subtitle} />

@@ -10,17 +10,18 @@ import { LiveFeed } from './LiveFeed';
 import { Timeline } from './Timeline';
 import { PurchaseGauge, RevenueLineChart, FeatureDemandBarChart, CustomerSegmentsPieChart, PricingHeatmap, SentimentDonutChart, CompetitorRadar } from './Charts';
 import {
-  executiveSummary,
-  kpiCards,
-  chartData,
-  personas,
-  painAnalysis,
-  marketOpportunity,
-  risks,
-  recommendations,
-  liveFeedMessages,
-  timelineEvents
+  executiveSummary as localExecutiveSummary,
+  kpiCards as localKpiCards,
+  chartData as localChartData,
+  personas as localPersonas,
+  painAnalysis as localPainAnalysis,
+  marketOpportunity as localMarketOpportunity,
+  risks as localRisks,
+  recommendations as localRecommendations,
+  liveFeedMessages as localLiveFeedMessages,
+  timelineEvents as localTimelineEvents
 } from '../../data/dashboardData.json';
+import { api, getRunId } from '../../api/client';
 
 const iconMap = {
   ShoppingCart,
@@ -33,8 +34,35 @@ const iconMap = {
 };
 
 export default function Dashboard() {
-  const [feed, setFeed] = useState(liveFeedMessages.slice(0, 4));
+  const [feed, setFeed] = useState(localLiveFeedMessages.slice(0, 4));
   const [selectedPersona, setSelectedPersona] = useState(null);
+  const [remote, setRemote] = useState(null);
+
+  const {
+    executiveSummary = localExecutiveSummary,
+    kpiCards = localKpiCards,
+    chartData = localChartData,
+    personas = localPersonas,
+    painAnalysis = localPainAnalysis,
+    marketOpportunity = localMarketOpportunity,
+    risks = localRisks,
+    recommendations = localRecommendations,
+    liveFeedMessages = localLiveFeedMessages,
+    timelineEvents = localTimelineEvents
+  } = remote || {};
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const id = await getRunId();
+      if (!id || !alive) return;
+      try {
+        const d = await api(`/validations/${id}/dashboard`);
+        if (alive && d && d.kpiCards) setRemote(d);
+      } catch {}
+    })();
+    return () => { alive = false; };
+  }, []);
 
   useEffect(() => {
     let index = 4;
@@ -46,7 +74,7 @@ export default function Dashboard() {
       });
     }, 2600);
     return () => clearInterval(interval);
-  }, []);
+  }, [liveFeedMessages]);
 
   return (
     <motion.section className="dashboard-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
