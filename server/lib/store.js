@@ -117,6 +117,12 @@ export async function listRuns() {
   return docs.map(docToRun);
 }
 
+export async function deleteRun(id) {
+  const col = await runsCollection();
+  const res = await col.deleteOne({ _id: id });
+  return res.deletedCount > 0;
+}
+
 export async function resolveRun(runId) {
   if (runId) {
     const run = await getRun(runId);

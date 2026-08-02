@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createRun, getRun, listRuns, resolveRun, seedRun } from './lib/store.js';
+import { createRun, deleteRun, getRun, listRuns, resolveRun, seedRun } from './lib/store.js';
 import { generatePersonas } from './lib/personas.js';
 import { predictScenario } from './lib/scenario.js';
 import { simulationTimeline } from './lib/seed.js';
@@ -74,6 +74,12 @@ export function buildRoutes() {
     const run = await getRun(req.params.id);
     if (!run) return res.status(404).json({ error: 'Run not found' });
     res.json(run);
+  });
+
+  router.delete('/validations/:id', async (req, res) => {
+    const ok = await deleteRun(req.params.id);
+    if (!ok) return res.status(404).json({ error: 'Run not found' });
+    res.json({ ok: true });
   });
 
   router.get('/validations/:id/personas', async (req, res) => {
